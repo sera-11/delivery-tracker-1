@@ -4,8 +4,9 @@ class DeliveriesController < ApplicationController
 
     @list_of_deliveries = matching_deliveries.order({ :created_at => :desc })
 
-    @waiting_on = @list_of_deliveries.where({ :arrived => false })
-    @received = @list_of_deliveries.where({ :arrvied => true })
+    @waiting_on = @list_of_deliveries.where({ :arrived => false }).order({ :supposed_to_arrive_on => :asc })
+
+    @received = @list_of_deliveries.where({ :arrived => true }).order({ :updated_at => :asc })
 
     render({ :template => "deliveries/index" })
   end
@@ -30,7 +31,7 @@ class DeliveriesController < ApplicationController
 
     if the_delivery.valid?
       the_delivery.save
-      redirect_to("/deliveries", { :notice => "Delivery created successfully." })
+      redirect_to("/deliveries", { :notice => "Added to list." })
     else
       redirect_to("/deliveries", { :alert => the_delivery.errors.full_messages.to_sentence })
     end
@@ -40,17 +41,17 @@ class DeliveriesController < ApplicationController
     the_id = params.fetch("path_id")
     the_delivery = Delivery.where({ :id => the_id }).at(0)
 
-    the_delivery.description = params.fetch("query_description")
-    the_delivery.supposed_to_arrive_on = params.fetch("query_supposed_to_arrive_on")
-    the_delivery.details = params.fetch("query_details")
-    the_delivery.arrived = params.fetch("query_arrived", false)
-    the_delivery.user_id = params.fetch("query_user_id")
+    #the_delivery.description = params.fetch("query_description")
+    #the_delivery.supposed_to_arrive_on = params.fetch("query_supposed_to_arrive_on")
+    #the_delivery.details = params.fetch("query_details")
+    the_delivery.arrived = true
+    #the_delivery.user_id = params.fetch("query_user_id")
 
     if the_delivery.valid?
       the_delivery.save
-      redirect_to("/deliveries/#{the_delivery.id}", { :notice => "Delivery updated successfully."} )
+      redirect_to("/deliveries", { :notice => "Delivery updated successfully."} )
     else
-      redirect_to("/deliveries/#{the_delivery.id}", { :alert => the_delivery.errors.full_messages.to_sentence })
+      redirect_to("/deliveries", { :alert => the_delivery.errors.full_messages.to_sentence })
     end
   end
 

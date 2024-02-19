@@ -1,0 +1,12 @@
+.waiting_on{
+  background-color: lightyellow;
+}
+
+.received{
+  background-color: lightgreen;
+}
+
+.overdue{
+  color: red;
+}
+

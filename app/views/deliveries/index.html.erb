@@ -57,20 +57,46 @@
 </div>
 
 <hr>
+<div class="waiting_on">
+  <h2> Waiting on </h2>
+  <% @waiting_on.each do |delivery_log|%>
+    <ul>
+      <li> <%= delivery_log.description %> 
+      <div class="date">
+        <% if delivery_log.supposed_to_arrive_on < Date.today %>
+        <p class="overdue"> Supposed to arrive on <%= delivery_log.supposed_to_arrive_on %> </p>
+        <%else%>
+        <p> Supposed to arrive on <%= delivery_log.supposed_to_arrive_on %> </p>
+        <%end%>
+      </div>
+      <p> <%= delivery_log.details %> </p>
+      <form action="/modify_delivery/<%= delivery_log.id %>" method="post">
+        <input type="hidden" name="query_arrived" value="true">
 
-<h2> Waiting on </h2>
-<% @waiting_on.each do |delivery_log|%>
-<ul>
-  <li> <%= delivery_log.description %> </li>
-  <p> Supposed to arrive on <%= delivery_log.supposed_to_arrive_on %> </p>
-  <form action="/modify_delivery/181401" method="post">
-            <input type="hidden" name="arrived" value="true">
+        <button>Mark as received</button>
+      </form>
+      </li>
+    </ul>
 
-            <button>Mark as received</button>
-  </form>
-</ul>
+  <%end%>
+</div> <!--end of waiting on div -->
 
-<%end%>
+
+<hr>
+<div class="received">
+  <h2> Received </h2>
+  <% @received.each do |delivery_log|%>
+    <ul>
+      <li> <%= delivery_log.description %> 
+      <p> Updated at <%= delivery_log.updated_at %> </p>
+      <a href="/delete_delivery/<%= delivery_log.id %>">Delete</a>
+      </li>
+    </ul>
+
+  <%end%>
+</div> <!--end of received div -->
+
+
 <!--
 <div>
   <div>
