@@ -4,6 +4,9 @@ class DeliveriesController < ApplicationController
 
     @list_of_deliveries = matching_deliveries.order({ :created_at => :desc })
 
+    @waiting_on = @list_of_deliveries.where({ :arrived => false })
+    @received = @list_of_deliveries.where({ :arrvied => true })
+
     render({ :template => "deliveries/index" })
   end
 
@@ -12,7 +15,7 @@ class DeliveriesController < ApplicationController
 
     matching_deliveries = Delivery.where({ :id => the_id })
 
-    @the_delivery = matching_deliveries.at(0)
+    
 
     render({ :template => "deliveries/show" })
   end
